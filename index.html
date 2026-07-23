@@ -304,6 +304,24 @@
   }
   .checkin-hint{font-size:13px; color:var(--cream-dim); line-height:1.5;}
 
+  .download-qr-btn{
+    display:block;
+    margin:16px auto 0;
+    background:none;
+    border:1px solid var(--gold);
+    color:var(--gold-bright);
+    padding:9px 20px;
+    font-family:'Cormorant SC', serif;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    font-size:12.5px;
+    cursor:pointer;
+    transition:all 0.2s;
+  }
+  .download-qr-btn:hover{
+    background:rgba(200,163,93,0.12);
+  }
+
   form.hide{display:none;}
 
   .footer-note{
@@ -415,6 +433,7 @@ async function renderGuestForm(){
           <div class="qr-box" id="qrBox"></div>
           <div class="checkin-code" id="checkinCode"></div>
           <div class="checkin-hint">Tunjukkan kode ini kepada penerima tamu di lokasi acara.</div>
+          <button type="button" class="download-qr-btn" id="downloadQrBtn">Unduh QR Code</button>
         </div>
       </div>
 
@@ -498,6 +517,16 @@ async function renderGuestForm(){
         });
         document.getElementById('checkinCode').textContent = nama;
         checkinCard.classList.add('show');
+
+        document.getElementById('downloadQrBtn').onclick = () => {
+          const canvas = document.querySelector('#qrBox canvas');
+          if(!canvas) return;
+          const link = document.createElement('a');
+          const safeName = nama.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'rsvp';
+          link.download = 'qr-' + safeName + '.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        };
       }
     } catch(err) {
       errorMsg.textContent = 'Gagal mengirim. Silakan coba lagi.';
