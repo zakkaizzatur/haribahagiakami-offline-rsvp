@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>RSVP — Hanna & Zakka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+SC:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --bg-0:#0f0d0c;
+    --bg-1:#17130f;
+    --line:#3a2e28;
+    --cream:#ece3d4;
+    --cream-dim:#bfb3a0;
+    --gold:#c8a35d;
+    --gold-bright:#e2c079;
+    --burgundy:#5e1c26;
+    --burgundy-bright:#7a2734;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, #241b13 0%, transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 110%, #1c0f10 0%, transparent 60%),
+      var(--bg-0);
+    color:var(--cream);
+    font-family:'EB Garamond', serif;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:48px 18px 80px;
+    position:relative;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size:64px 64px;
+    pointer-events:none;
+    z-index:0;
+  }
+  .card{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:460px;
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.1));
+    padding:44px 34px 38px;
+    animation:rise 0.9s ease both;
+  }
+  @keyframes rise{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .frame-corner{
+    position:absolute; width:22px; height:22px;
+    border:1px solid var(--gold); opacity:0.7;
+  }
+  .frame-corner.tl{top:-1px; left:-1px; border-right:none; border-bottom:none;}
+  .frame-corner.tr{top:-1px; right:-1px; border-left:none; border-bottom:none;}
+  .frame-corner.bl{bottom:-1px; left:-1px; border-right:none; border-top:none;}
+  .frame-corner.br{bottom:-1px; right:-1px; border-left:none; border-top:none;}
+
+  .eyebrow{
+    text-align:center;
+    font-family:'Cormorant SC', serif;
+    letter-spacing:0.28em;
+    font-size:11px;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .monogram{
+    text-align:center;
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    font-size:44px;
+    line-height:1;
+    color:var(--gold-bright);
+    margin-bottom:6px;
+  }
+  .monogram em{font-style:italic; color:var(--cream-dim); font-size:0.55em; margin:0 8px;}
+  .date-line{
+    text-align:center;
+    font-size:14px;
+    letter-spacing:0.14em;
+    color:var(--cream-dim);
+    margin-bottom:28px;
+  }
+  hr.rule{
+    border:none; height:1px;
+    background:linear-gradient(90deg, transparent, var(--line), transparent);
+    margin:0 0 26px;
+  }
+  .intro{
+    text-align:center;
+    font-size:16.5px;
+    line-height:1.6;
+    color:var(--cream-dim);
+    margin-bottom:30px;
+  }
+  label{
+    display:block;
+    font-family:'Cormorant SC', serif;
+    letter-spacing:0.18em;
+    font-size:11.5px;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:8px;
+  }
+  .field{margin-bottom:24px;}
+  input[type="text"]{
+    width:100%;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--line);
+    color:var(--cream);
+    font-family:'EB Garamond', serif;
+    font-size:19px;
+    padding:6px 2px 10px;
+    outline:none;
+    transition:border-color 0.25s;
+  }
+  input[type="text"]::placeholder{color:#5a4f45;}
+  input[type="text"]:focus{border-bottom-color:var(--gold);}
+
+  .pills{display:flex; gap:10px;}
+  .pill{
+    flex:1;
+    text-align:center;
+    padding:12px 8px;
+    border:1px solid var(--line);
+    cursor:pointer;
+    font-size:16px;
+    letter-spacing:0.03em;
+    color:var(--cream-dim);
+    transition:all 0.25s;
+    user-select:none;
+  }
+  .pill:hover{border-color:var(--gold);}
+  .pill.active-hadir{
+    background:linear-gradient(180deg, rgba(200,163,93,0.16), rgba(200,163,93,0.04));
+    border-color:var(--gold);
+    color:var(--gold-bright);
+  }
+  .pill.active-tidak{
+    background:linear-gradient(180deg, rgba(94,28,38,0.35), rgba(94,28,38,0.1));
+    border-color:var(--burgundy-bright);
+    color:#d99aa4;
+  }
+
+  .stepper{
+    display:flex; align-items:center; gap:0;
+    border:1px solid var(--line);
+    width:fit-content;
+    margin:0 auto;
+  }
+  .stepper button{
+    width:42px; height:42px;
+    background:none; border:none;
+    color:var(--gold-bright);
+    font-size:20px;
+    cursor:pointer;
+    font-family:'EB Garamond', serif;
+  }
+  .stepper button:hover{background:rgba(200,163,93,0.08);}
+  .stepper .count{
+    width:60px; text-align:center;
+    font-size:19px; color:var(--cream);
+    border-left:1px solid var(--line); border-right:1px solid var(--line);
+    height:42px; line-height:42px;
+  }
+  .count-wrap{display:flex; justify-content:center;}
+  .count-label{text-align:center; font-size:13px; color:var(--cream-dim); margin-top:8px; font-style:italic;}
+
+  .guest-count-field{
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transition:max-height 0.4s ease, opacity 0.3s ease, margin 0.4s ease;
+    margin-bottom:0;
+  }
+  .guest-count-field.open{
+    max-height:160px;
+    opacity:1;
+    margin-bottom:24px;
+  }
+
+  textarea{
+    width:100%;
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--cream);
+    font-family:'EB Garamond', serif;
+    font-size:16px;
+    padding:12px;
+    outline:none;
+    resize:vertical;
+    min-height:70px;
+    transition:border-color 0.25s;
+  }
+  textarea:focus{border-color:var(--gold);}
+  textarea::placeholder{color:#5a4f45;}
+
+  button.submit{
+    width:100%;
+    margin-top:8px;
+    padding:15px;
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color:#241a0c;
+    border:none;
+    font-family:'Cormorant SC', serif;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    font-size:14px;
+    cursor:pointer;
+    transition:filter 0.2s, transform 0.15s;
+  }
+  button.submit:hover{filter:brightness(1.08);}
+  button.submit:active{transform:scale(0.99);}
+  button.submit:disabled{opacity:0.5; cursor:default;}
+
+  .error{
+    color:#d99aa4;
+    font-size:14px;
+    text-align:center;
+    margin-top:12px;
+    min-height:18px;
+  }
+
+  /* Seal confirmation state */
+  .seal-wrap{
+    display:none;
+    text-align:center;
+    padding:30px 10px 6px;
+  }
+  .seal-wrap.show{display:block; animation:fadeIn 0.6s ease both;}
+  @keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
+  .seal{
+    width:96px; height:96px;
+    margin:0 auto 22px;
+    border-radius:50%;
+    border:1.5px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    animation:sealIn 0.7s cubic-bezier(.2,1.4,.4,1) both;
+  }
+  @keyframes sealIn{
+    from{transform:scale(0.4) rotate(-25deg); opacity:0;}
+    to{transform:scale(1) rotate(0deg); opacity:1;}
+  }
+  .seal::before{
+    content:'';
+    position:absolute; inset:8px;
+    border:1px solid var(--gold);
+    border-radius:50%;
+    opacity:0.6;
+  }
+  .seal-initials{
+    font-family:'Cormorant Garamond', serif;
+    font-size:30px;
+    color:var(--gold-bright);
+  }
+  .seal-title{
+    font-family:'Cormorant Garamond', serif;
+    font-size:24px;
+    color:var(--cream);
+    margin-bottom:8px;
+  }
+  .seal-sub{color:var(--cream-dim); font-size:15px; line-height:1.6;}
+
+  .checkin-card{
+    display:none;
+    margin-top:26px;
+    border:1px solid var(--line);
+    padding:24px 20px 20px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
+  }
+  .checkin-card.show{display:block; animation:fadeIn 0.6s ease 0.2s both;}
+  .checkin-label{
+    font-family:'Cormorant SC', serif;
+    letter-spacing:0.2em; font-size:11px; text-transform:uppercase;
+    color:var(--gold); margin-bottom:16px;
+  }
+  .qr-box{
+    display:flex; justify-content:center;
+    background:var(--cream);
+    padding:14px;
+    width:fit-content;
+    margin:0 auto 14px;
+  }
+  .checkin-code{
+    font-family:'Cormorant Garamond', serif;
+    font-size:20px; letter-spacing:0.12em;
+    color:var(--gold-bright); margin-bottom:6px;
+  }
+  .checkin-hint{font-size:13px; color:var(--cream-dim); line-height:1.5;}
+
+  form.hide{display:none;}
+
+  .footer-note{
+    text-align:center;
+    font-size:12.5px;
+    color:#6b6055;
+    margin-top:26px;
+    letter-spacing:0.04em;
+  }
+
+  /* Admin view */
+  .admin-wrap{width:100%; max-width:640px;}
+  .admin-title{
+    font-family:'Cormorant Garamond', serif;
+    font-size:30px; color:var(--gold-bright);
+    text-align:center; margin-bottom:4px;
+  }
+  .admin-sub{text-align:center; color:var(--cream-dim); font-size:14px; margin-bottom:26px;}
+  .stats-row{display:flex; gap:14px; margin-bottom:28px; flex-wrap:wrap;}
+  .stat{
+    flex:1; min-width:120px;
+    border:1px solid var(--line);
+    padding:16px; text-align:center;
+  }
+  .stat .num{font-family:'Cormorant Garamond', serif; font-size:32px; color:var(--gold-bright);}
+  .stat .lbl{font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--cream-dim); margin-top:4px;}
+  table{width:100%; border-collapse:collapse; font-size:15px;}
+  th,td{padding:10px 8px; border-bottom:1px solid var(--line); text-align:left;}
+  th{color:var(--gold); font-family:'Cormorant SC', serif; letter-spacing:0.08em; font-size:12px; text-transform:uppercase; font-weight:500;}
+  td.hadir-yes{color:#9fd4a8;}
+  td.hadir-no{color:#d99aa4;}
+  .empty-state{text-align:center; color:var(--cream-dim); padding:30px 0; font-style:italic;}
+  .refresh-btn{
+    display:block; margin:22px auto 0;
+    background:none; border:1px solid var(--line); color:var(--cream-dim);
+    padding:8px 18px; cursor:pointer; font-size:13px; letter-spacing:0.08em;
+  }
+  .refresh-btn:hover{border-color:var(--gold); color:var(--gold);}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const isAdmin = params.get('admin') === '1';
+const app = document.getElementById('app');
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+const SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwBhtKQCvI6IXQyO0CzZU_BFv2KY-_S9C_6kyw6cWIhRsT85hko1kGVf6f2pghrIUcU/exec';
+
+async function renderGuestForm(){
+  app.innerHTML = `
+    <div class="card">
+      <div class="frame-corner tl"></div><div class="frame-corner tr"></div>
+      <div class="frame-corner bl"></div><div class="frame-corner br"></div>
+      <div class="eyebrow">Konfirmasi Kehadiran</div>
+      <div class="monogram">H<em>&</em>Z</div>
+      <div class="date-line">SABTU · 8 AGUSTUS 2026 · OEMAH KAYANA</div>
+      <hr class="rule">
+      <div class="intro">Dengan segala hormat, mohon konfirmasi kehadiran Anda pada acara pernikahan kami.</div>
+
+      <form id="rsvpForm">
+        <div class="field">
+          <label>Nama</label>
+          <input type="text" id="nama" placeholder="Nama lengkap Anda" autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label>Konfirmasi Kehadiran</label>
+          <div class="pills">
+            <div class="pill" id="pillHadir" data-val="hadir">Hadir</div>
+            <div class="pill" id="pillTidak" data-val="tidak">Tidak Hadir</div>
+          </div>
+        </div>
+
+        <div class="guest-count-field" id="guestCountField">
+          <label>Jumlah Tamu Hadir</label>
+          <div class="count-wrap">
+            <div class="stepper">
+              <button type="button" id="minusBtn">−</button>
+              <div class="count" id="countVal">1</div>
+              <button type="button" id="plusBtn">+</button>
+            </div>
+          </div>
+          <div class="count-label">termasuk Anda</div>
+        </div>
+
+        <div class="field">
+          <label>Doa &amp; Ucapan (opsional)</label>
+          <textarea id="pesan" placeholder="Tuliskan doa atau ucapan untuk kami..."></textarea>
+        </div>
+
+        <button type="submit" class="submit" id="submitBtn">Kirim Konfirmasi</button>
+        <div class="error" id="errorMsg"></div>
+      </form>
+
+      <div class="seal-wrap" id="sealWrap">
+        <div class="seal"><div class="seal-initials">H&amp;Z</div></div>
+        <div class="seal-title">Terima Kasih</div>
+        <div class="seal-sub" id="sealSub">Konfirmasi kehadiran Anda telah kami terima.</div>
+
+        <div class="checkin-card" id="checkinCard">
+          <div class="checkin-label">Kartu Akses Masuk</div>
+          <div class="qr-box" id="qrBox"></div>
+          <div class="checkin-code" id="checkinCode"></div>
+          <div class="checkin-hint">Tunjukkan kode ini kepada penerima tamu di lokasi acara.</div>
+        </div>
+      </div>
+
+      <div class="footer-note">Hanna &amp; Zakka · 8 Agustus 2026</div>
+    </div>
+  `;
+
+  let kehadiran = null;
+  let count = 1;
+
+  const pillHadir = document.getElementById('pillHadir');
+  const pillTidak = document.getElementById('pillTidak');
+  const guestCountField = document.getElementById('guestCountField');
+  const countVal = document.getElementById('countVal');
+  const errorMsg = document.getElementById('errorMsg');
+
+  pillHadir.addEventListener('click', () => {
+    kehadiran = 'hadir';
+    pillHadir.classList.add('active-hadir');
+    pillTidak.classList.remove('active-tidak');
+    guestCountField.classList.add('open');
+  });
+  pillTidak.addEventListener('click', () => {
+    kehadiran = 'tidak';
+    pillTidak.classList.add('active-tidak');
+    pillHadir.classList.remove('active-hadir');
+    guestCountField.classList.remove('open');
+  });
+  document.getElementById('minusBtn').addEventListener('click', () => {
+    if(count > 1){ count--; countVal.textContent = count; }
+  });
+  document.getElementById('plusBtn').addEventListener('click', () => {
+    if(count < 10){ count++; countVal.textContent = count; }
+  });
+
+  document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorMsg.textContent = '';
+    const nama = document.getElementById('nama').value.trim();
+    const pesan = document.getElementById('pesan').value.trim();
+
+    if(!nama){ errorMsg.textContent = 'Mohon isi nama Anda.'; return; }
+    if(!kehadiran){ errorMsg.textContent = 'Mohon pilih konfirmasi kehadiran.'; return; }
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Mengirim...';
+
+    const entry = {
+      nama,
+      kehadiran,
+      jumlah: kehadiran === 'hadir' ? count : 0,
+      pesan,
+      submittedAt: new Date().toISOString()
+    };
+
+    try {
+      await fetch(SHEET_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(entry)
+      });
+
+      document.getElementById('rsvpForm').classList.add('hide');
+      const sealWrap = document.getElementById('sealWrap');
+      document.getElementById('sealSub').textContent = kehadiran === 'hadir'
+        ? `Sampai jumpa di hari bahagia kami, ${nama}!`
+        : `Terima kasih atas doa dan ucapannya, ${nama}.`;
+      sealWrap.classList.add('show');
+
+      if(kehadiran === 'hadir'){
+        const checkinCard = document.getElementById('checkinCard');
+        document.getElementById('qrBox').innerHTML = '';
+        new QRCode(document.getElementById('qrBox'), {
+          text: nama,
+          width: 140,
+          height: 140,
+          colorDark: '#17130f',
+          colorLight: '#ece3d4'
+        });
+        document.getElementById('checkinCode').textContent = nama;
+        checkinCard.classList.add('show');
+      }
+    } catch(err) {
+      errorMsg.textContent = 'Gagal mengirim. Silakan coba lagi.';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Kirim Konfirmasi';
+    }
+  });
+}
+
+async function renderAdmin(){
+  app.innerHTML = `
+    <div class="admin-wrap">
+      <div class="admin-title">Daftar RSVP — Tamu Offline</div>
+      <div class="admin-sub">Hanna &amp; Zakka · 8 Agustus 2026</div>
+      <div class="empty-state">Semua data RSVP tersimpan langsung di Google Sheet yang terhubung.<br>Buka Sheet tersebut untuk melihat daftar, jumlah tamu, dan ucapan terbaru.</div>
+    </div>
+  `;
+}
+
+if(isAdmin){ renderAdmin(); } else { renderGuestForm(); }
+</script>
+</body>
+</html>
